@@ -20,15 +20,20 @@ import javax.swing.border.EtchedBorder;
  * @author GavinC 
  */
 public class ClippyGui extends Frame implements Runnable{
-    private ImageIcon newImage = new ImageIcon(getClass().getResource("Images/clippyIntro.gif"));
-    private ImageIcon micIcon = new ImageIcon(getClass().getResource("Images/mic.png")) ;
-    private ImageIcon editIcon = new ImageIcon(getClass().getResource("Images/edit.png"));
-    private ImageIcon speechIcon = new ImageIcon(getClass().getResource("Images/speech.png"));
-    private ImageIcon exitIcon = new ImageIcon(getClass().getResource("Images/exit.png"));
+    private ImageIcon newImage = new ImageIcon(getClass()
+    .getResource("Images/clippyIntro.gif"));
+    private ImageIcon micIcon = new ImageIcon(getClass()
+    .getResource("Images/mic.png")) ;
+    private ImageIcon editIcon = new ImageIcon(getClass()
+    .getResource("Images/edit.png"));
+    private ImageIcon speechIcon = new ImageIcon(getClass()
+    .getResource("Images/speech.png"));
+    private ImageIcon exitIcon = new ImageIcon(getClass()
+    .getResource("Images/exit.png"));
     private JPanel clipPnl = new JPanel();
     private JLabel imgLbl = new JLabel();
     private JLabel speechLbl = new JLabel();
-    private JTextField exeTxt = new JTextField();
+    private JTextArea exeTxt = new JTextArea();
     private JTextArea clippyTxt;
     private JScrollPane clippyScroll;
     private Button searchBtn = new Button("Search");
@@ -37,7 +42,6 @@ public class ClippyGui extends Frame implements Runnable{
     private RoundButton exitBtn = new RoundButton(exitIcon);
     private RoundButton voiceBtn = new RoundButton(micIcon);
     private RoundButton editBtn = new RoundButton(editIcon);
-    private Dialog clipDialog = null;
     private String user = "";
     private boolean isIdle;
     private boolean exeState;
@@ -75,15 +79,13 @@ public class ClippyGui extends Frame implements Runnable{
     /**
      * Creates a panel for the components of the interface 
      */
-     public void createPnl(){
-        clipPnl.setLayout(null);
+     private void createPnl(){
+        setPnl(clipPnl);
         setImage();
         addClippyTxt();
         setSpeechImg();
         addBtn();
         addField();
-        this.add(clipPnl);
-        clipPnl.setBounds(0, 0, 350, 300);
         clipPnl.setBackground(getBgColor());
     }
     
@@ -183,11 +185,12 @@ public class ClippyGui extends Frame implements Runnable{
         exeBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                if(clippyTxt.equals("")){
-                    genImage("clippyError");
+                isIdle = false;
+                String txt = exeTxt.getText();
+                if(txt.equals("")){   
+                    errorState = true;      
                 }
                 else{
-                    isIdle = false;
                     exeState = true;
                 }               
             }
@@ -204,8 +207,7 @@ public class ClippyGui extends Frame implements Runnable{
             @Override
             public void actionPerformed(ActionEvent e){ 
                 isIdle = false;  
-                searchState = true;
-                         
+                searchState = true;            
             }
         });
         clipPnl.add(searchBtn); 
@@ -263,7 +265,6 @@ public class ClippyGui extends Frame implements Runnable{
      */
     public void addField(){
         exeTxt.setBounds(25, 195, 300, 30);
-        exeTxt.setOpaque(false);
         exeTxt.setFont(txtFont);
         exeTxt.setBorder(new EtchedBorder());
         clipPnl.add(exeTxt);
@@ -279,7 +280,8 @@ public class ClippyGui extends Frame implements Runnable{
             Random imgGen = new Random();
             int imgNum = imgGen.nextInt(4);
             fileName = "clippy" + imgNum;
-            newImage = new ImageIcon(getClass().getResource("Images/" + fileName + ".gif"));
+            newImage = new ImageIcon(getClass()
+            .getResource("Images/" + fileName + ".gif"));
             //Generate random comments that clippy says when idle 
             if(imgNum == 0){
                 setClippyTxt("Uploading Virus....");
@@ -305,7 +307,8 @@ public class ClippyGui extends Frame implements Runnable{
     public void genImage(String imgName){
         try{
             String img = imgName;
-            newImage = new ImageIcon(getClass().getResource("Images/" + img + ".gif"));   
+            newImage = new ImageIcon(getClass()
+            .getResource("Images/" + img + ".gif"));   
         }
         catch(NullPointerException ex){   
           System.err.println("Cannot find image");
@@ -364,7 +367,7 @@ public class ClippyGui extends Frame implements Runnable{
      * Set the visibility of the GUI components 
      * @param visible true if components are visible otherwise false
      */
-    public void setComVisible(boolean visible){
+    private void setComVisible(boolean visible){
          exitBtn.setVisible(visible);
          exeBtn.setVisible(visible);
          searchBtn.setVisible(visible);
@@ -416,7 +419,10 @@ public class ClippyGui extends Frame implements Runnable{
     public void runExeSte() throws InterruptedException{
         setBtnEnabled(false);
         genImage("clippyVoice");
-        setClippyTxt("Executing Command...");      
+        setClippyTxt("Executing Command..."); 
+        navMenu = new NavMenu();
+        navMenu.pack();
+        navMenu.setVisible(true);
     }
     
     /**
@@ -425,10 +431,9 @@ public class ClippyGui extends Frame implements Runnable{
     public void runErrorSte() throws InterruptedException{
         setBtnEnabled(false);
         genImage("clippyError");
-        if(exeState){
-            setClippyTxt("Cannot Execute Error!");
-        }
-        else if(voiceState){
+        setClippyTxt("Cannot Execute Error!");
+        
+        if(voiceState){
             setClippyTxt("What? Speak Again?");
         }
         else{
@@ -468,6 +473,7 @@ public class ClippyGui extends Frame implements Runnable{
         }
         else if(voiceState){
             runVoiceSte();
+            voiceState = false;
         }
         else{
               

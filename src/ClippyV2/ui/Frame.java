@@ -8,8 +8,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
@@ -17,28 +17,27 @@ import javax.swing.JFrame;
  */
 public abstract class Frame extends JFrame {
     private static final Color backgroundColor = Color.white;
-    private ImageIcon exitIcon;
-    private RoundButton exitFrame;
+    protected Button exitButton;
+    private int xSize = 0;
+    private int ySize = 0;
+    protected Dialog clipDialog = null;
 
     public Frame(int sizeX, int sizeY, int locatX, int locatY){
         super();
-        this.setPreferredSize(new Dimension(sizeX,sizeY));
-        this.setLocation((int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth()-locatX, 
-        (int)java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight()-locatY);
+        xSize = sizeX;
+        ySize = sizeY;
+        this.setPreferredSize(new Dimension(xSize,ySize));
+        this.setLocation((int)java.awt.Toolkit.getDefaultToolkit()
+        .getScreenSize().getWidth()-locatX,(int)java.awt.Toolkit
+        .getDefaultToolkit().getScreenSize().getHeight()-locatY);
         this.setUndecorated(true);
         this.setBackground(backgroundColor);
         this.setOpacity(0.6f);
         this.setLayout(null);
         this.setResizable(false);
         this.setAlwaysOnTop(true);
-        try{
-            exitIcon = new ImageIcon(getClass().
-            getResource("View/Images/exit.png")); 
-        }
-        catch(NullPointerException ex){
-            
-        }
-        exitFrame = new RoundButton(exitIcon);
+        exitButton = new Button("Close");
+        createExitBtn();
     }
     
     public Color getBgColor(){
@@ -49,8 +48,18 @@ public abstract class Frame extends JFrame {
         this.setPreferredSize(new Dimension(x,y));
     }
     
-    public void createExitBtn(){
-        exitFrame.addActionListener(new ActionListener(){
+    public void setPnl(JPanel pnl){
+        pnl.setLayout(null);
+        pnl.setBounds(0,0,xSize,ySize);
+        this.add(pnl);
+    }
+    
+    public Button getExitBtn(){
+        return exitButton;
+    }
+    
+    public final void createExitBtn(){
+        exitButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){ 
                dispose();

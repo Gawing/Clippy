@@ -13,7 +13,6 @@ import ClippyV2.ui.Frame;
 public class HelpMenu extends Frame {
     public HelpMenu(){
         super(500,500,850,300);
-        
     }
     
 }

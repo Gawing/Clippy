@@ -1,12 +1,11 @@
 java.exe	Clippy
 explorer.exe	Start
-explorer.exe	Libraries
-firefox.exe	Mozilla Firefox Start Page - Mozilla Firefox
-chrome.exe	Google - Google Chrome
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
-wmplayer.exe	Windows Media Player
 netbeans.exe	ClippyAlpha1 - NetBeans IDE 7.1.1
+WINWORD.EXE	Blog Entries (Autosaved) - Microsoft Word
+explorer.exe	SDP
+firefox.exe	teihoata/Clippy - Mozilla Firefox
+firefox.exe	Google - Mozilla Firefox
+msnmsgr.exe	Windows Live Messenger
+AcroRd32.exe	SDP Course Schedule S1 2012 v3.1.pdf - Adobe Reader
+firefox.exe	Downloads
 explorer.exe	Program Manager
-SynTPEnh.exe	Default IME

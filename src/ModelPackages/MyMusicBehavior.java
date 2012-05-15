@@ -37,7 +37,7 @@ import org.apache.commons.io.FileUtils;
         public MyMusicBehavior() throws IOException
         {
             
-            songList.add("pause song");
+            songList.add("pause");
             songList.add("play next song");
             songList.add("volume up");
             songList.add("volume down");
@@ -72,8 +72,6 @@ import org.apache.commons.io.FileUtils;
         {
             super.onEntry();
 
-            // now lets add our custom songs from the play list
-            // First, get the JSAPI RuleGrammar
             BaseRecognizer recognizer = new BaseRecognizer(getGrammar().getGrammarManager());
             try
             {
@@ -95,7 +93,7 @@ import org.apache.commons.io.FileUtils;
                 {
                     String newRuleName = ruleName + count;
                     Rule newRule = null;
-                    if (song.equalsIgnoreCase("pause song") || song.equalsIgnoreCase("volume up") || song.equalsIgnoreCase("volume down"))
+                    if (song.equalsIgnoreCase("pause") || song.equalsIgnoreCase("volume up") || song.equalsIgnoreCase("volume down"))
                     {
                         newRule = ruleGrammar.ruleForJSGF(song
                                 + " { " + newRuleName + " }");
@@ -126,13 +124,13 @@ import org.apache.commons.io.FileUtils;
             // now lets commit the changes
             getGrammar().commitChanges();
             grammarChanged();
+            help();
         }
 
         @Override
         public String onRecognize(Result result) throws GrammarException
         {
-            String next = "";
-//            String listen = super.onRecognize(result);
+            String next = super.onRecognize(result);;
             trace("Recognize result: " + result.getBestFinalResultNoFiller());
             String listen = result.getBestFinalResultNoFiller();
             System.out.println(listen);
@@ -151,7 +149,6 @@ import org.apache.commons.io.FileUtils;
                     {
                         File file1 = (File) iterator.next();
                         String fileName = file1.getName().substring(0, file1.getName().indexOf('.')).replaceAll("[^A-Za-z&&[^']]", " ").replaceAll("\\s+", " ").trim();
-//                        System.out.println("Comparing " + fileName.toLowerCase() + " and " + substring);a
                         if (fileName.equalsIgnoreCase(substring))
                         {
                             System.out.println("Name of found file: " + file1.getName());
@@ -189,7 +186,7 @@ import org.apache.commons.io.FileUtils;
                 }
                 else
                 {
-                    if (listen.equalsIgnoreCase("pause song"))
+                    if (listen.equalsIgnoreCase("pause"))
                     {
                         try
                         {
@@ -232,29 +229,12 @@ import org.apache.commons.io.FileUtils;
                                 {
                                 }
                             }
-                            else
-                            {
-                                if (listen.equalsIgnoreCase("play next song"))
+                            else if (listen.equalsIgnoreCase("play next song"))
                                 {
                                     System.out.println("playing next song");
                                     ArrayList<File> list = new ArrayList(files);
-                                    for (int i = 0; i < list.size(); i++)
-                                    {
-                                        if (list.get(i).equals(selectedFile))
-                                        {
-                                            if ((i + 1) < list.size())
-                                            {
-
-                                                selectedFile = list.get(i + 1);
-                                                System.out.println(selectedFile.getName());
-                                                i = list.size() + 1;
-                                            }
-                                            else
-                                            {
-                                                selectedFile = list.get(0);
-                                                i = list.size() + 1;
-                                            }
-                                        }
+                                    System.out.println(list.size());
+                                    selectedFile = list.get((int)(Math.random()*list.size()));                      
                                         try
                                         {
                                             try
@@ -294,8 +274,8 @@ import org.apache.commons.io.FileUtils;
                             }
                         }
                     }
-                }
-            }
+                
+            
             return next;
         }
-    }
+ }

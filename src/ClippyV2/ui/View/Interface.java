@@ -4,8 +4,6 @@
  */
 package ClippyV2.ui.View;
 
-import ClippyV2.ui.View.ClippyGui;
-
 /**
  * Starts the User Interface 
  * @author GavinC

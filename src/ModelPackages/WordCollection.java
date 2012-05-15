@@ -34,7 +34,8 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      * WordCollection constructor
      *
      */
-    public WordCollection() {
+    public WordCollection() 
+    {
         super("Clippy");
         this.setUndecorated(true);
         this.setAlwaysOnTop(true);
@@ -43,7 +44,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         setSize(200, 250);
         this.setLocation((int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, (int) java.awt.Toolkit.getDefaultToolkit().getScreenSize().getHeight() - 280);
         getContentPane().add(createMainPanel(), BorderLayout.CENTER);
-
+        
         // exit if the window is closed
 
         addWindowListener(new WindowAdapter() {
@@ -91,7 +92,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     private void startListening() {
         if (wordsRecognizer.microphoneOn()) {
-            setMessage(menu + "\n " + "Clippy is listening...");
+            //setMessage(menu + "\n " + "Clippy is listening...");
         }
         else {
             setMessage(
@@ -113,29 +114,26 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     public void go() throws IOException {
         //Get the configuration from the xml resource
-        URL url = WordCollection.class.getResource("dialog.config.xml");
+        URL url = WordCollection.class.getResource("clippy.config.xml");
         ConfigurationManager cm = new ConfigurationManager(url);
         wordsRecognizer = (WordRecognizer) cm.lookup("dialogManager");
 
         //Add each menu node to the words to be recognised
         wordsRecognizer.addNode("menu", new MyBehavior());
-        wordsRecognizer.addNode("email", new MyBehavior());
         wordsRecognizer.addNode("tell me the time", new MyBehavior());
-        wordsRecognizer.addNode("news", new MyBehavior());
         wordsRecognizer.addNode("music", new MyMusicBehavior());
         wordsRecognizer.addNode("movies", new MyMovieBehavior());
         wordsRecognizer.addNode("desktop", new MyDesktopBehavior());
-
-        //Set the first menu as the main menu option
-        wordsRecognizer.setInitialNode("menu");
-
-        System.out.println("Loading IntelliJ");
+        wordsRecognizer.addNode("web", new MyWebsiteBehavior());
+        wordsRecognizer.addNode("remove website", new removeWebsiteBehavior());
+   
+        setMessage("Loading IntelliJ");
         initJIntellitype();
 
-        System.out.println("Loading dialogs ...");
+        setMessage("Loading dialogs ...");
         wordsRecognizer.allocate();
 
-        System.out.println("Running  ...");
+        setMessage("Running  ...");
 
         wordsRecognizer.addWordListener(new WordsListener() {
 
@@ -145,9 +143,10 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
         });
 
         updateGui();
-        setMessage("Click speak or press keyboard shortcut to start");
+        //Set the first menu as the main menu option
+        wordsRecognizer.setInitialNode("menu");
     }
-
+  
     /**
      * Update the display with the new menu information.
      *
@@ -161,8 +160,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
                     //setMessage("I didn't understand what you said");
                 }
                 else {
-                    System.out.println(word);
-                    setMessage(word);
+                    //setMessage(word);
                 }
 
                 speakButton.setEnabled(true);
@@ -285,7 +283,7 @@ public class WordCollection extends JFrame implements HotkeyListener, Intellityp
      */
     private JPanel createMessagePanel() {
         JPanel messagePanel = getJPanel(new BorderLayout());
-        messageTextField = new JTextArea("Please wait while I'm loading...");
+        messageTextField = new JTextArea("Loading...");
         messageTextField.setBackground(backgroundColor);
         messageTextField.setForeground(Color.WHITE);
         messageTextField.setEditable(false);
